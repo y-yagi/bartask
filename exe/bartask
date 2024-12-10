@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require "bartask"
+Bartask::Cli.start

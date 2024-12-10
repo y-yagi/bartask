@@ -1,0 +1,35 @@
+name: Ruby
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
+    strategy:
+      matrix:
+        ruby:
+          - '3.3.5'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Setup RDBMS
+        run: |
+          for i in {1..60}; do docker compose up -d && break; sleep 1; done
+          # Wait until database servers start
+          function mysql_ping { mysqladmin -u root -h 127.0.0.1 -P 13306 ping; }
+          function pg_ping { PGPASSWORD=password pg_isready -U postgres -h 127.0.0.1 -p 15432; }
+          for i in {1..60}; do mysql_ping && break; sleep 1; done
+          for i in {1..60}; do pg_ping && break; sleep 1; done
+      - name: Run the default task
+        run: bundle exec rake

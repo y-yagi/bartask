@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: "mysql:8.0"
+    ports:
+      - "13306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+  postgres:
+    image: "postgres:14"
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
