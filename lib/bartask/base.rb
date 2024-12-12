@@ -40,7 +40,7 @@ module Bartask
     def branch_name
       @branch_name ||= begin
         stdout, _, _ = Open3.capture3("git name-rev --name-only HEAD")
-        stdout.strip
+        stdout.strip.gsub("/", "_")
       end
     end
 
