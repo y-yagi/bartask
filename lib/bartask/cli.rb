@@ -7,9 +7,9 @@ class Bartask::Cli
       options = cli.parse
 
       if options[:mode] == "r"
-        Bartask::Restorer.new(config_file_path: options[:config]).execute
+        Bartask::Restorer.new(config_file_path: options[:config], dump_file_path: options[:dump]).execute
       else
-        Bartask::Dumper.new(config_file_path: options[:config]).execute
+        Bartask::Dumper.new(config_file_path: options[:config], dump_file_path: options[:dump]).execute
       end
     end
   end
@@ -58,12 +58,20 @@ class Bartask::Cli
         opts.on("-C", "--config PATH", "Config file path") do |v|
           @options[:config] = v
         end
+
+        opts.on("-D", "--dump PATH", "Dump file path") do |v|
+          @options[:dump] = v
+        end
       end,
       'r' => OptionParser.new do |opts|
         opts.banner = "Usage: #{CMD} r [options]"
 
         opts.on("-C", "--config PATH", "Config file path") do |v|
           @options[:config] = v
+        end
+
+        opts.on("-D", "--dump PATH", "Dump file path") do |v|
+          @options[:dump] = v
         end
       end
     }

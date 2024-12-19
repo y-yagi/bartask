@@ -19,15 +19,38 @@ class TestBartask < Minitest::Test
     end
   end
 
+  def test_postgresql_with_dump_option
+    Dir.chdir("test/dummy_application") do
+      FileUtils.cp "config/database_postgresql.yml", "config/database.yml"
+
+      setup_db
+
+      system("bundle exec ../../exe/bartask d --dump tmp/bartask.dump", exception: true)
+      assert File.exist?("tmp/bartask.dump")
+
+      system("bundle exec ../../exe/bartask r --dump tmp/bartask.dump", exception: true)
+      assert_db_data
+    end
+  end
+
+  private
+
   def dump_and_restore
-    system("bin/rails db:drop db:create db:migrate db:seed", exception: true)
-    stdout, _, _ = Open3.capture3("bin/rails r 'puts User.count'")
-    assert_equal "3", stdout.strip
+    setup_db
+    assert_db_data
 
     system("bundle exec ../../exe/bartask d", exception: true)
     assert File.exist?("tmp/dummy_application_development_main.dump")
 
     system("bundle exec ../../exe/bartask r", exception: true)
+    assert_db_data
+  end
+
+  def setup_db
+    system("bin/rails db:drop db:create db:migrate db:seed", exception: true)
+  end
+
+  def assert_db_data
     stdout, _, _ = Open3.capture3("bin/rails r 'puts User.count'")
     assert_equal "3", stdout.strip
   end

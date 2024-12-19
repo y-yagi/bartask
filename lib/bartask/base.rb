@@ -7,13 +7,16 @@ require "open3"
 
 module Bartask
   class Base
-    def initialize(config_file_path: nil)
+    def initialize(config_file_path: nil, dump_file_path: nil)
       @config_file_path = config_file_path || Pathname.new("config/database.yml")
+      @specified_dump_file_path = dump_file_path
       parse_config_file
     end
 
     def dump_file_path
       @dump_file_path ||= begin
+        return @specified_dump_file_path unless @specified_dump_file_path.nil?
+
         suffix = branch_name.empty? ? "" : "_#{branch_name}"
         Pathname.new("tmp/#{@config["database"]}#{suffix}.dump")
       end
