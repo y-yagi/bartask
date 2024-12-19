@@ -44,7 +44,7 @@ class Bartask::Cli
 
   def global_command
     @global_command ||= OptionParser.new do |opts|
-      opts.banner = "Usage: #{CMD} [options] [subcommand [options]]"
+      opts.banner = "Usage: #{CMD} [subcommand] [options]"
       opts.separator ""
       opts.separator USAGE
     end
