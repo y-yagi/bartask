@@ -26,7 +26,7 @@ class TestBartask < Minitest::Test
       setup_db
 
       system("bundle exec ../../exe/bartask d --dump tmp/bartask.dump", exception: true)
-      assert File.exist?("tmp/bartask.dump")
+      assert File.exist?("tmp/bartask.dump"), Dir["tmp/*"].inspect
 
       system("bundle exec ../../exe/bartask r --dump tmp/bartask.dump", exception: true)
       assert_db_data
@@ -40,7 +40,7 @@ class TestBartask < Minitest::Test
     assert_db_data
 
     system("bundle exec ../../exe/bartask d", exception: true)
-    assert File.exist?("tmp/dummy_application_development_main.dump")
+    assert File.exist?("tmp/dummy_application_development_main.dump"), Dir["tmp/*"].inspect
 
     system("bundle exec ../../exe/bartask r", exception: true)
     assert_db_data
