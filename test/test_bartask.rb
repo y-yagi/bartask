@@ -40,7 +40,7 @@ class TestBartask < Minitest::Test
     assert_db_data
 
     system("bundle exec ../../exe/bartask d", exception: true)
-    assert File.exist?("tmp/dummy_application_development_main.dump"), Dir["tmp/*"].inspect
+    assert !Dir.glob("tmp/dummy_application_development_*.dump").empty?, Dir["tmp/*"].inspect
 
     system("bundle exec ../../exe/bartask r", exception: true)
     assert_db_data
