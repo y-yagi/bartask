@@ -5,3 +5,6 @@ require "bartask"
 require "debug"
 
 require "minitest/autorun"
+
+# Skip confirmation dialogs during tests
+ENV["BARTASK_SKIP_CONFIRM"] = "true"
