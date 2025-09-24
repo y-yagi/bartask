@@ -65,5 +65,13 @@ module Bartask
       options.push(*%w[--clean --no-owner --no-acl])
       options
     end
+
+    def confirm(message)
+      return true if ENV["BARTASK_SKIP_CONFIRM"] == "true" || ENV["RAILS_ENV"] == "test"
+
+      $stdout.print "#{message} (y/N): "
+      response = $stdin.gets.chomp
+      response.downcase == 'y' || response.downcase == 'yes'
+    end
   end
 end

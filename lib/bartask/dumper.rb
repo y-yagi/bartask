@@ -3,6 +3,11 @@
 module Bartask
   class Dumper < Base
     def execute
+      unless confirm("Are you sure you want to dump the database to '#{dump_file_path}'?")
+        $stdout.puts "Dump operation cancelled."
+        return
+      end
+
       if mysql?
         system("mysqldump #{build_options_for_mysql.join(' ')} > #{dump_file_path}")
       elsif postgresql?

@@ -3,6 +3,11 @@
 module Bartask
   class Restorer < Base
     def execute
+      unless confirm("Are you sure you want to restore the database from '#{dump_file_path}'? This will overwrite existing data.")
+        $stdout.puts "Restore operation cancelled."
+        return
+      end
+
       if mysql?
         system("mysql #{build_options_for_mysql.join(' ')} < #{dump_file_path}", exception: true)
       elsif postgresql?
