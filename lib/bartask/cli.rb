@@ -1,10 +1,13 @@
 require "optparse"
+require "bartask/version"
 
 class Bartask::Cli
   class << self
     def start(argv = ARGV)
       cli = new(argv)
       options = cli.parse
+
+      return if options[:version_shown]
 
       if options[:mode] == "r"
         Bartask::Restorer.new(config_file_path: options[:config], dump_file_path: options[:dump]).execute
@@ -29,6 +32,8 @@ class Bartask::Cli
 
   def parse
     global_command.order!(@argv)
+    return @options if @options[:version_shown]
+
     @options[:mode] = @argv.shift
     subcommand = subcommands[@options[:mode]]
     unless subcommand
@@ -47,6 +52,11 @@ class Bartask::Cli
       opts.banner = "Usage: #{CMD} [subcommand] [options]"
       opts.separator ""
       opts.separator USAGE
+
+      opts.on("-v", "--version", "Show version") do
+        puts Bartask::VERSION
+        @options[:version_shown] = true
+      end
     end
   end
 
